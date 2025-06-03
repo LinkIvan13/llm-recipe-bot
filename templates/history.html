@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>История запросов</title>
+</head>
+<body>
+    <h1>История запросов</h1>
+
+    <form method="get">
+        <label>С даты (ISO): <input type="text" name="from_date" value="{{ from_date }}"></label>
+        <label>Ключевое слово: <input type="text" name="keyword" value="{{ keyword }}"></label>
+        <button type="submit">Фильтровать</button>
+    </form>
+
+    <ul>
+        {% for entry in history %}
+        <li>
+            <strong>{{ entry.timestamp }}</strong><br>
+            <em>{{ entry.question }}</em>
+            <ul>
+                {% for r in entry.response %}
+                <li><strong>{{ r.title }}</strong>: {{ r.description }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

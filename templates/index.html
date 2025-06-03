@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Генератор рецептов GPT</title>
+</head>
+<body>
+    <nav>
+        <a href="/">Главная</a> |
+        <a href="/history">История</a>
+    </nav>
+
+    <h1>Введите ингредиенты:</h1>
+
+    <form method="post">
+        <input type="text" name="ingredients" placeholder="например, яйца, молоко, мука" style="width: 300px;" required>
+        <button type="submit">Получить рецепты</button>
+    </form>
+
+    {% if recipes %}
+    <h2>Результаты для: {{ ingredients }}</h2>
+    <ul>
+    {% for item in recipes %}
+    <li>
+        <strong>{{ item.title }}</strong>: {{ item.description }}
+        [<a href="/explain?title={{ item.title | urlencode }}">Подробнее</a>]
+    </li>
+    {% endfor %}
+    </ul>
+
+    {% endif %}
+</body>
+</html>
