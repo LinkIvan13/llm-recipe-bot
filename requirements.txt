@@ -6,4 +6,4 @@ jinja2
 aiofiles
 python-multipart
 python-dotenv>=1.0.1
-aiogram==3.4.1
+aiogram>=3.2.0

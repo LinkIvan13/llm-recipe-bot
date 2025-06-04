@@ -1,43 +1,55 @@
+import hashlib
 from aiogram import Router, F
-from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from aiogram.types import Message, CallbackQuery
 from aiogram.filters import CommandStart
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from aiogram.exceptions import TelegramBadRequest
 
 from openai_client import ask_gpt, ask_gpt_explanation
 
 router = Router()
 
+# Храним название блюда по ID
+dish_registry = {}
+
+def generate_dish_id(dish_title: str) -> str:
+    return hashlib.sha1(dish_title.encode()).hexdigest()[:10]  # короткий ID
 
 @router.message(F.text)
 async def handle_message(message: Message):
     ingredients = message.text.strip()
 
-    # Игнорируем команды вида /start, /help и т.д.
     if ingredients.startswith("/"):
         return
 
     try:
         recipes = ask_gpt(ingredients)
-        if not recipes:
-            raise ValueError("Ответ пустой или не содержит рецептов.")
 
-        text = f"📋 <b>Рецепты для:</b> <i>{ingredients}</i>\n\n"
-        keyboard = InlineKeyboardBuilder()
-
+        kb = []
         for r in recipes:
-            text += f"🍲 <b>{r['title']}</b>\n{r['description']}\n\n"
-            keyboard.row(
+            title = r["title"]
+            dish_id = generate_dish_id(title)
+            dish_registry[dish_id] = title
+
+            kb.append([
                 InlineKeyboardButton(
-                    text=f"👨‍🍳 Объясни: {r['title']}",
-                    callback_data=f"explain:{r['title']}"
+                    text=f"🧾 Объясни: {title[:30]}",
+                    callback_data=f"explain:{dish_id}"
                 )
-            )
+            ])
 
-        await message.answer(text, reply_markup=keyboard.as_markup(), parse_mode="HTML")
+        response = "\n\n".join(
+            f"🍲 <b>{r['title']}</b>\n{r['description']}" for r in recipes
+        )
 
+        await message.answer(
+            f"📋 <b>Рецепты для:</b> <i>{ingredients}</i>\n\n{response}",
+            reply_markup=InlineKeyboardMarkup(inline_keyboard=kb),
+            parse_mode="HTML"
+        )
     except Exception as e:
         await message.answer(
-            f"🍽️ <b>Ошибка</b>\nМодель вернула невалидный JSON.\n\n<code>{str(e)}</code>",
+            f"🍽️ <b>Ошибка GPT</b>\n<code>{str(e)}</code>",
             parse_mode="HTML"
         )
 
@@ -55,15 +67,32 @@ async def cmd_start(message: Message):
 
 @router.callback_query(F.data.startswith("explain:"))
 async def explain_dish(callback: CallbackQuery):
-    dish = callback.data.split(":", 1)[1]
-    await callback.answer()  # чтобы убрать "загрузка" у кнопки
+    await callback.answer()  # скрыть "загрузка"
 
     try:
-        explanation = ask_gpt_explanation(dish)
-        await callback.message.answer(f"👨‍🍳 <b>{dish}</b>\n\n{explanation}", parse_mode="HTML")
-    except Exception as e:
+        dish_id = callback.data.split("explain:")[1]
+        dish_title = dish_registry.get(dish_id)
+
+        if not dish_title:
+            await callback.message.answer("⚠️ Не удалось найти блюдо. Отправьте новый список.")
+            return
+
+        explanation = ask_gpt_explanation(dish_title)
+
         await callback.message.answer(
-            f"⚠️ Ошибка при получении пояснения: <code>{str(e)}</code>",
+            f"👨‍🍳 <b>{dish_title}</b>\n\n{explanation}",
             parse_mode="HTML"
         )
+
+    except TelegramBadRequest as e:
+        await callback.message.answer(
+            f"❌ Ошибка Telegram: <code>{str(e)}</code>",
+            parse_mode="HTML"
+        )
+    except Exception as e:
+        await callback.message.answer(
+            f"⚠️ Ошибка при генерации пояснения: <code>{str(e)}</code>",
+            parse_mode="HTML"
+        )
+
 
