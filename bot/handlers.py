@@ -9,26 +9,40 @@ from openai_client import ask_gpt, ask_gpt_explanation
 
 router = Router()
 
-# Храним название блюда по ID
+# Храним соответствие ID → названия блюда
 dish_registry = {}
 
+
 def generate_dish_id(dish_title: str) -> str:
-    return hashlib.sha1(dish_title.encode()).hexdigest()[:10]  # короткий ID
+    """Генерирует короткий ID для блюда по его названию"""
+    return hashlib.sha1(dish_title.encode()).hexdigest()[:10]
+
 
 @router.message(F.text)
 async def handle_message(message: Message):
     ingredients = message.text.strip()
 
+    # Игнорируем команды
     if ingredients.startswith("/"):
         return
 
     try:
         recipes = ask_gpt(ingredients)
 
+        if not recipes:
+            await message.answer("⚠️ Модель не вернула рецепты. Попробуйте другой список ингредиентов.")
+            return
+
         kb = []
         for r in recipes:
-            title = r["title"]
+            title = r.get("title", "Без названия")
+            description = r.get("description", "Нет описания")
+
             dish_id = generate_dish_id(title)
+            # если коллизия — расширяем ID
+            while dish_id in dish_registry and dish_registry[dish_id] != title:
+                dish_id = generate_dish_id(title + str(len(dish_registry)))
+
             dish_registry[dish_id] = title
 
             kb.append([
@@ -39,7 +53,8 @@ async def handle_message(message: Message):
             ])
 
         response = "\n\n".join(
-            f"🍲 <b>{r['title']}</b>\n{r['description']}" for r in recipes
+            f"🍲 <b>{r.get('title', 'Без названия')}</b>\n{r.get('description', 'Нет описания')}"
+            for r in recipes
         )
 
         await message.answer(
@@ -94,5 +109,4 @@ async def explain_dish(callback: CallbackQuery):
             f"⚠️ Ошибка при генерации пояснения: <code>{str(e)}</code>",
             parse_mode="HTML"
         )
-
 
