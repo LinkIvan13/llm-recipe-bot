@@ -3,28 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <title>История запросов</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <h1>История запросов</h1>
-
-    <form method="get">
-        <label>С даты (ISO): <input type="text" name="from_date" value="{{ from_date }}"></label>
-        <label>Ключевое слово: <input type="text" name="keyword" value="{{ keyword }}"></label>
-        <button type="submit">Фильтровать</button>
-    </form>
-
-    <ul>
+    <nav>
+        <a href="/">Главная</a>
+        <a href="/history">История</a>
+    </nav>
+    <div class="container">
+        <h1>История запросов</h1>
+        <form method="get" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <input type="text" name="from_date" value="{{ from_date }}" placeholder="С даты (ISO)">
+            <input type="text" name="keyword" value="{{ keyword }}" placeholder="Ключевое слово">
+            <button type="submit" title="Фильтровать">&#128269;</button>
+        </form>
+        <ul class="history-list">
         {% for entry in history %}
-        <li>
-            <strong>{{ entry.timestamp }}</strong><br>
-            <em>{{ entry.question }}</em>
-            <ul>
-                {% for r in entry.response %}
-                <li><strong>{{ r.title }}</strong>: {{ r.description }}</li>
-                {% endfor %}
-            </ul>
-        </li>
+            <li class="recipe-card">
+                <strong>{{ entry.timestamp }}</strong><br>
+                <em>{{ entry.question }}</em>
+                <ul>
+                    {% for r in entry.response %}
+                    <li><strong>{{ r.title }}</strong>: {{ r.description }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
         {% endfor %}
-    </ul>
+        </ul>
+    </div>
 </body>
 </html>
