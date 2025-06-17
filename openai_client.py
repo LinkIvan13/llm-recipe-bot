@@ -33,14 +33,25 @@ def ask_gpt(ingredients: str) -> list[dict]:
         return [{"title": "Ошибка GPT", "description": str(e)}]
 
 def ask_gpt_explanation(dish: str) -> str:
-    """Запрашивает у GPT пояснение, как готовить блюдо"""
+    """Запрашивает у GPT пояснение, как готовить блюдо, и добавляет КБЖУ"""
     try:
+        messages = [
+            {
+                "role": "system",
+                "content": "Ты профессиональный повар. Объясни как приготовить блюдо пошагово."
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Расскажи, как приготовить {dish} пошагово. "
+                    f"В конце добавь расчёт КБЖУ:\n"
+                    f"Калории: ... ккал\nБелки: ... г\nЖиры: ... г\nУглеводы: ... г"
+                )
+            }
+        ]
         response = client.chat.completions.create(
             model="gpt-4",
-            messages=[
-                {"role": "system", "content": "Ты профессиональный повар. Объясни как приготовить блюдо пошагово."},
-                {"role": "user", "content": f"Расскажи, как приготовить {dish} подробно, пошагово."}
-            ]
+            messages=messages
         )
         return response.choices[0].message.content.strip()
     except Exception as e:

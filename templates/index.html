@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Генератор рецептов GPT</title>
+    <title>AI Рецепты</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -10,24 +10,28 @@
         <a href="/">Главная</a>
         <a href="/history">История</a>
     </nav>
+
     <div class="container">
-        <h1>Введите ингредиенты:</h1>
-        <form method="post">
-            <input type="text" name="ingredients" placeholder="например, яйца, молоко, мука" value="{{ ingredients or '' }}">
-            <button type="submit">Получить рецепты</button>
+        <h1>Генератор рецептов</h1>
+        <form method="post" class="input-form">
+            <input type="text" name="ingredients" placeholder="Введите ингредиенты через запятую..." required>
+            <button type="submit">Сгенерировать</button>
         </form>
 
         {% if recipes %}
-        <h2>Результаты для: {{ ingredients }}</h2>
-        <ul class="recipe-list">
-            {% for item in recipes %}
-            <li class="recipe-card">
-                <h3>{{ item.title }}</h3>
-                <p>{{ item.description }}</p>
-                <a href="/explain?title={{ item.title | urlencode }}">Подробнее</a>
-            </li>
-            {% endfor %}
-        </ul>
+        <div class="recipe-list">
+            <h2>Результаты:</h2>
+            <ul>
+                {% for r in recipes %}
+                <li class="recipe-card">
+                    <strong>{{ r.title }}</strong><br>
+                    {{ r.description }}
+                    <br>
+                    <a href="/explain?title={{ r.title | urlencode }}">[Подробнее]</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
         {% endif %}
     </div>
 </body>

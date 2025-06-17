@@ -10,13 +10,15 @@
         <a href="/">Главная</a>
         <a href="/history">История</a>
     </nav>
+
     <div class="container">
         <h1>История запросов</h1>
-        <form method="get" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+        <form method="get" class="input-form">
             <input type="text" name="from_date" value="{{ from_date }}" placeholder="С даты (ISO)">
             <input type="text" name="keyword" value="{{ keyword }}" placeholder="Ключевое слово">
             <button type="submit" title="Фильтровать">&#128269;</button>
         </form>
+
         <ul class="history-list">
         {% for entry in history %}
             <li class="recipe-card">
@@ -25,8 +27,8 @@
                 <ul>
                     {% for r in entry.response %}
                     <li>
-    <strong>{{ r.title }}</strong>: {{ r.description }}
-    <a href="/explain?title={{ r.title | urlencode }}">[Подробнее]</a>
+                        <strong>{{ r.title }}</strong>: {{ r.description }}
+                        <a href="/explain?title={{ r.title | urlencode }}">[Подробнее]</a>
                     </li>
                     {% endfor %}
                 </ul>

@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>{{ title }}</title>
+    <title>Пояснение к рецепту</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -10,10 +10,31 @@
         <a href="/">Главная</a>
         <a href="/history">История</a>
     </nav>
+
     <div class="container">
-        <h1>Как приготовить: {{ title }}</h1>
-        <div class="explain-block">
-            {{ explanation | safe }}
+        <h1 class="recipe-title">{{ title }}</h1>
+
+        <div class="explanation-card">
+            <h2>Пошаговое приготовление</h2>
+            {% set parts = explanation.split('\nКалории:') %}
+            <div class="steps-block">
+                <p>{{ parts[0] }}</p>
+            </div>
+
+            {% if parts|length > 1 %}
+            <h2>Калорийность и состав (КБЖУ)</h2>
+            <table class="kbju-table">
+                {% for line in ('Калории:' ~ parts[1]).split('\n') %}
+                    {% set items = line.split(':') %}
+                    {% if items|length == 2 %}
+                    <tr>
+                        <td><strong>{{ items[0].strip() }}</strong></td>
+                        <td>{{ items[1].strip() }}</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+            {% endif %}
         </div>
     </div>
 </body>

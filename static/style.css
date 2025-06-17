@@ -1,106 +1,136 @@
+/* Базовые стили */
 body {
-    font-family: "Segoe UI", sans-serif;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    background-color: #f8f9fb;
+    color: #333;
     margin: 0;
     padding: 0;
-    background-color: #f4f6f8;
+}
+
+nav {
+    background-color: #ffffff;
+    padding: 14px 24px;
+    border-bottom: 1px solid #e5e5e5;
+    display: flex;
+    gap: 20px;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+nav a {
+    text-decoration: none;
     color: #333;
+    transition: color 0.2s ease;
+}
+
+nav a:hover {
+    color: #4CAF50;
 }
 
 .container {
     max-width: 900px;
-    margin: auto;
-    padding: 20px;
+    margin: 30px auto;
+    padding: 24px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
 }
 
-nav {
-    background-color: #2c3e50;
-    padding: 15px 20px;
+/* Формы */
+.input-form {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
 }
 
-nav a {
-    color: #ffffff;
-    text-decoration: none;
-    margin-right: 20px;
-    font-weight: 600;
-}
-
-nav a:hover {
-    text-decoration: underline;
-}
-
-h1, h2 {
-    color: #2c3e50;
-    margin-bottom: 15px;
-}
-
-form {
-    margin-bottom: 30px;
-}
-
-form input[type="text"] {
-    padding: 10px;
-    width: 300px;
-    max-width: 100%;
+.input-form input {
+    flex-grow: 1;
+    padding: 10px 14px;
     border: 1px solid #ccc;
     border-radius: 6px;
+    font-size: 1rem;
+    min-width: 200px;
 }
 
-form button {
-    padding: 10px 20px;
-    background-color: #3366cc;
+.input-form button {
+    background: #4CAF50;
     color: white;
+    padding: 10px 18px;
     border: none;
     border-radius: 6px;
-    margin-left: 10px;
     cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background 0.2s ease;
 }
 
-form button:hover {
-    background-color: #254e9e;
+.input-form button:hover {
+    background: #45a049;
 }
 
-.recipe-list, .history-list {
+/* Рецепты / история */
+.recipe-list ul,
+.history-list {
     list-style: none;
     padding: 0;
 }
 
 .recipe-card {
-    background: #fff;
+    padding: 16px 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background-color: #fdfdfd;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.recipe-card ul {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+/* Таблица КБЖУ */
+.kbju-table {
+    margin-top: 1.5em;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.kbju-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+.kbju-table td:first-child {
+    font-weight: 600;
+    width: 40%;
+}
+
+/* Пояснение */
+.explanation-card {
+    background-color: #f6f6f6;
+    border-left: 4px solid #4CAF50;
+    padding: 16px 20px;
     border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.recipe-card h3 {
-    margin-top: 0;
-    margin-bottom: 8px;
-    color: #2c3e50;
-}
-
-.recipe-card p {
-    margin: 0;
-}
-
-.explain-block {
-    background-color: #f0f2f5;
-    padding: 15px;
-    border-radius: 8px;
+    font-size: 1rem;
     white-space: pre-wrap;
-    font-size: 15px;
-    line-height: 1.6;
+    margin-top: 20px;
 }
 
-@media screen and (max-width: 600px) {
+/* Адаптивность */
+@media (max-width: 600px) {
     nav {
-        text-align: center;
+        flex-direction: column;
+        gap: 10px;
     }
-    form input[type="text"] {
-        width: 100%;
-        margin-bottom: 10px;
+
+    .input-form {
+        flex-direction: column;
     }
-    form button {
+
+    .input-form input, .input-form button {
         width: 100%;
-        margin: 0;
     }
 }
