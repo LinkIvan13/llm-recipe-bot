@@ -24,7 +24,10 @@
                 <em>{{ entry.question }}</em>
                 <ul>
                     {% for r in entry.response %}
-                    <li><strong>{{ r.title }}</strong>: {{ r.description }}</li>
+                    <li>
+    <strong>{{ r.title }}</strong>: {{ r.description }}
+    <a href="/explain?title={{ r.title | urlencode }}">[Подробнее]</a>
+                    </li>
                     {% endfor %}
                 </ul>
             </li>
