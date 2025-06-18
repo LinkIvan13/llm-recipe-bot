@@ -17,35 +17,34 @@
 
 ## 📁 Структура проекта
 
+<pre>
 llm_bot_project/
 ├── bot/
-│ ├── handlers.py # Обработка сообщений и команд
-│ ├── keyboards.py # Кнопки (задел)
-│ ├── main.py # Запуск Telegram-бота
-│ ├── tg_config.py # Загрузка токенов из .env
-│ └── init.py
-├── main.py # Запуск FastAPI-приложения
-├── openai_client.py # Обёртки для OpenAI GPT
-├── prompt_builder.py # Формирование prompt'ов
-├── templates/ # HTML-шаблоны
-│ ├── index.html
-│ ├── history.html
-│ └── explain.html
+│   ├── handlers.py          # Обработка сообщений и команд
+│   ├── keyboards.py         # Кнопки (задел)
+│   ├── main.py              # Запуск Telegram-бота
+│   ├── tg_config.py         # Загрузка токенов из .env
+│   └── __init__.py
+├── main.py                  # Запуск FastAPI-приложения
+├── openai_client.py         # Обёртки для OpenAI GPT
+├── prompt_builder.py        # Формирование prompt'ов
+├── templates/               # HTML-шаблоны
+│   ├── index.html
+│   ├── history.html
+│   └── explain.html
 ├── static/
-│ └── style.css # Современные стили
-├── logger.py # Логирование и история
-├── history.json # История запросов
+│   └── style.css            # Современные стили
+├── logger.py                # Логирование и история
+├── history.json             # История запросов
 ├── tests/
-│ └── test_openai_client.py
-├── .env.example # Пример переменных окружения
+│   └── test_openai_client.py
+├── .env.example             # Пример переменных окружения
 ├── requirements.txt
 └── README.md
-
-yaml
-Копировать
-Редактировать
+</pre>
 
 ---
+
 
 ## ⚙️ Установка и запуск
 
