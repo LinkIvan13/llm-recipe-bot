@@ -112,4 +112,4 @@ pytest tests/
 
 ## 📺 Видео-обзор
 
-🔗 [Смотреть демо на Google.Диске](https://drive.google.com/file/d/1-CEPiQ_3sv4QZWvdo4mwOPCrbwlksU0z/view?usp=sharing)
+🎬 [Смотреть демо на Google.Диске](https://drive.google.com/file/d/1-CEPiQ_3sv4QZWvdo4mwOPCrbwlksU0z/view?usp=sharing)
